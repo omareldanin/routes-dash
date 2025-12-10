@@ -1,0 +1,27 @@
+import axios from "axios";
+// import toast from "react-hot-toast";
+
+const baseURL = "http://localhost:3200/";
+
+export interface APIError {
+  message: string;
+  status: string;
+}
+
+export const api = axios.create({
+  baseURL,
+  headers: { "Content-Type": "application/json" },
+});
+
+api.interceptors.request.use(
+  async (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  async (error) => {
+    return Promise.reject(error);
+  }
+);
