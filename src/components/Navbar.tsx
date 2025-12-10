@@ -9,7 +9,6 @@ interface NavbarProps {
 
 export default function Navbar({ toggleSidebar }: NavbarProps) {
   const { name, role, avatar, logout } = useAuth();
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
   return (
@@ -56,20 +55,6 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
               3
             </span>
           </button> */}
-
-          {showNotifications && (
-            <div className="absolute left-0 top-15 w-64 bg-white border rounded-lg shadow-lg text-right">
-              <div className="p-3 border-b font-semibold">الإشعارات</div>
-              <ul className="max-h-60 overflow-y-auto">
-                <li className="p-3 hover:bg-gray-50 cursor-pointer text-sm">
-                  إشعار جديد 1
-                </li>
-              </ul>
-              <div className="p-2 text-center text-sm text-gray-500 border-t">
-                عرض الكل
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Settings */}

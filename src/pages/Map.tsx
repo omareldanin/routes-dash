@@ -70,8 +70,6 @@ export default function DeliveryMapPage() {
         />
 
         {data?.results.map((d) => {
-          const lat = d?.latitude ? Number(d?.latitude) : null;
-          const lng = d?.longitudes ? Number(d?.longitudes) : null;
           if (!d?.latitude || !d?.longitudes) return null;
 
           const avatar =

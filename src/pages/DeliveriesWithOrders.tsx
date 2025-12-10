@@ -26,7 +26,7 @@ export default function DeliveriesOrdersPage() {
   const [deliveryId, setDeliveryId] = useState<number | undefined>(undefined);
   const [isAddOrderOpen, setAddOrderOpen] = useState(false);
 
-  const [filters, setFilters] = useState<GetOrdersParams>({
+  const [filters] = useState<GetOrdersParams>({
     deliveryId: undefined,
     clientId: undefined,
     status: undefined,

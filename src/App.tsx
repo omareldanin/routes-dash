@@ -6,7 +6,6 @@ import PrivateRoutes from "./components/PrivateWrappers";
 import AppLayout from "./layouts/AppLayout";
 import "ldrs/react/DotSpinner.css";
 import "leaflet/dist/leaflet.css";
-import { useAuth } from "./store/authStore";
 import CompaniesPage from "./pages/Companies";
 import AddCompany from "./pages/AddCompany";
 import EditCompany from "./pages/EditCompany";
@@ -23,8 +22,6 @@ import DeliveriesOrdersPage from "./pages/DeliveriesWithOrders";
 import DeliveryPage from "./pages/Delivery";
 
 function App() {
-  const { role } = useAuth();
-
   return (
     <Router>
       <Routes>

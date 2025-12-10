@@ -39,9 +39,9 @@ export default function Setting() {
   useEffect(() => {
     if (user) {
       reset({
-        max: user.user.company?.max,
-        min: user.user.company?.min,
-        deliveryPrecent: user.user.company?.deliveryPrecent,
+        max: user.user?.max,
+        min: user.user?.min,
+        deliveryPrecent: user.user?.deliveryPrecent,
       });
     }
   }, [user]);
