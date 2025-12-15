@@ -65,7 +65,7 @@ export default function ClientsPage() {
       {/* Table */}
       <div className="bg-white shadow rounded-2xl p-4">
         {/* Search */}
-        <div className="flex justify-between items-center mb-10 gap-4">
+        <div className="flex items-center mb-10 gap-4">
           <input
             type="text"
             placeholder="بحث بإسم العميل .."
