@@ -16,6 +16,7 @@ import { deleteClient } from "../services/clients";
 
 export default function ClientsPage() {
   const [search, setSearch] = useState<string | undefined>(undefined);
+  const [searchPhone, setPhone] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
   const navigation = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -25,6 +26,7 @@ export default function ClientsPage() {
     page,
     size: 10,
     name: search,
+    phone: searchPhone,
   });
 
   const { mutate: deleteUserById, isPending: deleteLoading } = useMutation({
@@ -66,10 +68,17 @@ export default function ClientsPage() {
         <div className="flex justify-between items-center mb-10 gap-4">
           <input
             type="text"
-            placeholder="بحث عن عميل .."
+            placeholder="بحث بإسم العميل .."
             className="w-1/3 px-4 py-2 border border-[#E0E0E0] rounded-lg focus:ring-2 focus:ring-[#D9C8AA] focus:outline-none bg-[#F9FAFB] text-gray-900 placeholder-gray-400"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="بحث برقم الهاتف .."
+            className="w-1/3 px-4 py-2 border border-[#E0E0E0] rounded-lg focus:ring-2 focus:ring-[#D9C8AA] focus:outline-none bg-[#F9FAFB] text-gray-900 placeholder-gray-400"
+            value={searchPhone}
+            onChange={(e) => setPhone(e.target.value)}
           />
         </div>
         {isLoading ? (
