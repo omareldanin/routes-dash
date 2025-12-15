@@ -393,6 +393,7 @@ export default function OrdersPage() {
                       <td className="p-3  border-b-1 border-b-indigo-100">
                         {order.processed ||
                         order.status === "CANCELED" ||
+                        order.status === "DELIVERED" ||
                         superAdmin ? (
                           <span className="text-green-600 font-bold">
                             {order.delivery
@@ -431,6 +432,7 @@ export default function OrdersPage() {
                         <div className="flex items-center gap-2">
                           {order.processed ||
                           order.status === "CANCELED" ||
+                          order.status === "DELIVERED" ||
                           superAdmin ? (
                             <div
                               className={`w-full px-2 py-2 border border-gray-300 rounded-md text-md focus:outline-none focus:ring-1 focus:ring-[#21114A] text-center ${
