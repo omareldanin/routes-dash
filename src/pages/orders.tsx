@@ -74,7 +74,7 @@ export default function OrdersPage() {
 
   const toggleSelect = (id: number) => {
     setSelectedRows((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
   };
 
@@ -384,12 +384,18 @@ export default function OrdersPage() {
                       <td className="p-3  border-b-1 border-b-indigo-100">
                         {create.toLocaleString()}
                       </td>
-                      <td className="p-3  border-b-1 border-b-indigo-100">
-                        {order.from}
+                      <td className="p-3 border-b-1 border-b-indigo-100 max-w-[220px]">
+                        <div className="truncate" title={order.from}>
+                          {order.from}
+                        </div>
                       </td>
-                      <td className="p-3  border-b-1 border-b-indigo-100">
-                        {order.to}
+
+                      <td className="p-3 border-b-1 border-b-indigo-100 max-w-[220px]">
+                        <div className="truncate" title={order.to}>
+                          {order.to}
+                        </div>
                       </td>
+
                       <td className="p-3  border-b-1 border-b-indigo-100">
                         {order.processed ||
                         order.status === "CANCELED" ||
@@ -405,7 +411,7 @@ export default function OrdersPage() {
                             value={
                               order?.delivery
                                 ? deliveryOptions?.find(
-                                    (o) => o.value === order?.delivery.id
+                                    (o) => o.value === order?.delivery.id,
                                   )
                                 : undefined
                             }
@@ -437,12 +443,12 @@ export default function OrdersPage() {
                             <div
                               className={`w-full px-2 py-2 border border-gray-300 rounded-md text-md focus:outline-none focus:ring-1 focus:ring-[#21114A] text-center ${
                                 orderStatusOptions.find(
-                                  (opt) => opt.value === order.status
+                                  (opt) => opt.value === order.status,
                                 )?.style
                               }`}>
                               {
                                 orderStatusOptions.find(
-                                  (opt) => opt.value === order.status
+                                  (opt) => opt.value === order.status,
                                 )?.label
                               }
                             </div>
@@ -457,7 +463,7 @@ export default function OrdersPage() {
                               }}
                               className={`w-full px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-[#21114A] ${
                                 orderStatusOptions.find(
-                                  (opt) => opt.value === order.status
+                                  (opt) => opt.value === order.status,
                                 )?.style
                               }`}>
                               {orderStatusOptions.map((opt) => (

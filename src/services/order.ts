@@ -107,14 +107,14 @@ export interface GetOrdersParams {
 }
 
 export const getOrders = async (
-  params: GetOrdersParams
+  params: GetOrdersParams,
 ): Promise<OrdersResponse> => {
   const response = await api.get("/orders", { params });
   return response.data;
 };
 
 export const getExportOrders = async (
-  params: GetOrdersParams
+  params: GetOrdersParams,
 ): Promise<Blob> => {
   const response = await api.get("/orders/export", {
     params,
@@ -125,7 +125,7 @@ export const getExportOrders = async (
 };
 
 export const getDeliveriesWithOrders = async (
-  params: GetOrdersParams
+  params: GetOrdersParams,
 ): Promise<DeliveryWithOrders> => {
   const response = await api.get("/orders/deliveries-with-last-orders", {
     params,
@@ -154,7 +154,7 @@ export const updateOrder = async (data: any, id: number) => {
 };
 
 export const resetDeliveryCount = async (params: GetOrdersParams) => {
-  const respone = await api.post("/orders/reset-delivery-count", params);
+  const respone = await api.get("/orders/reset-delivery-count", { params });
   return respone.data;
 };
 

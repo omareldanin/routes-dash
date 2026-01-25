@@ -84,6 +84,7 @@ export default function DeliveryPage() {
       minutes ? ":" + minutes.toString().padStart(2, "0") : ""
     }${period}`;
   }
+  // console.log(filters);
 
   const { mutate: editOrder, isPending } = useMutation({
     mutationFn: () => resetDeliveryCount(filters),
@@ -265,11 +266,16 @@ export default function DeliveryPage() {
                       <td className="p-2  border-b-1 border-b-indigo-100">
                         {order.total.toLocaleString()}
                       </td>
-                      <td className="p-2  border-b-1 border-b-indigo-100 text-indigo-700">
-                        {`${order.from} - ${order.to}`}
+                      <td className="p-3 border-b-1 border-b-indigo-100 max-w-[220px]">
+                        <div className="truncate" title={order.from}>
+                          {`${order.from} - ${order.to}`}
+                        </div>
                       </td>
-                      <td className="p-2  border-b-1 border-b-indigo-100 text-red-700">
-                        {order.notes}
+
+                      <td className="p-3 border-b-1 border-b-indigo-100 max-w-[220px]">
+                        <div className="truncate" title={order.notes}>
+                          {order.notes}
+                        </div>
                       </td>
                     </tr>
                   );
