@@ -1,7 +1,7 @@
 import axios from "axios";
 // import toast from "react-hot-toast";
 
-const baseURL = "https://test.talabatk.top/";
+const baseURL = "https://api.routes-co.com/";
 
 export interface APIError {
   message: string;
