@@ -230,7 +230,7 @@ export default function DeliveryPage() {
           <>
             <table className="w-full text-sm text-right border-separate border-spacing-y-2">
               <thead>
-                <tr className="text-gray-600">
+                <tr className="bg-gradient-to-r from-[#1c46a2] to-[#9341a7ff] text-white shadow-sm">
                   <th className="p-2">#</th>
                   <th className="p-2">التاريخ</th>
                   <th className="p-2">حالة الطلب</th>

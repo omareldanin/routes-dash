@@ -87,10 +87,12 @@ export default function ClientsPage() {
           <>
             <table className="w-full text-sm text-right border-separate border-spacing-y-2">
               <thead>
-                <tr className="text-gray-600">
+                <tr className="bg-gradient-to-r from-[#1c46a2] to-[#9341a7ff] text-white shadow-sm">
                   <th className="p-2">الكود</th>
                   <th className="p-2">اسم العميل</th>
                   <th className="p-2">رقم الهاتف</th>
+                  <th className="p-2">قيمة الشحن</th>
+                  <th className="p-2">رابط العميل</th>
                   <th className="p-2">العنوان</th>
                   <th className="p-2">عدد الاوردرات</th>
                   <th className="p-2">مجموع ما دفعه للشركه</th>
@@ -118,33 +120,52 @@ export default function ClientsPage() {
                         {client.phone}
                       </td>
                       <td className="p-3  border-b-1 border-b-indigo-100">
+                        {client.shippingValue || 0}
+                      </td>
+                      <td className="p-3  border-b-1 border-b-indigo-100">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(
+                              `https://routes-co.com/client/${client.key}`,
+                            );
+                            toast.success("تم نسخ الرابط بنجاح");
+                          }}
+                          className="px-2 bg-[#9341a7ff] text-white py-2 rounded-lg hover:bg-[#9341a7ff] transition">
+                          نسخ الرابط
+                        </button>
+                      </td>
+                      <td className="p-3  border-b-1 border-b-indigo-100">
                         {client.address}
                       </td>
                       <td className="p-3  border-b-1 border-b-indigo-100">
                         {client.ordersCount}
                       </td>
+
                       <td className="p-3  border-b-1 border-b-indigo-100">
                         {client.totalShipping}
                       </td>
                       <td className="p-3  border-b-1 border-b-indigo-100">
                         {client.totalAmount}
                       </td>
-                      <td className="p-3 flex gap-2  border-b-1 border-b-indigo-100">
-                        <button
-                          className="text-red-500 hover:text-red-700"
-                          onClick={() => {
-                            setIsDialogOpen(true);
-                            setId(client.id);
-                          }}>
-                          <Trash2 size={18} />
-                        </button>
-                        <button
-                          className="text-blue-500 hover:text-blue-700"
-                          onClick={() => {
-                            navigation(`/client/edit/${client.id}`);
-                          }}>
-                          <Edit size={18} />
-                        </button>
+                      <td className="p-3  border-b-1 border-b-indigo-100">
+                        <div className="flex gap-2">
+                          <button
+                            className="text-red-500 hover:text-red-700"
+                            onClick={() => {
+                              setIsDialogOpen(true);
+                              setId(client.id);
+                            }}>
+                            <Trash2 size={18} />
+                          </button>
+                          <button
+                            className="text-blue-500 hover:text-blue-700"
+                            onClick={() => {
+                              navigation(`/client/edit/${client.id}`);
+                            }}>
+                            <Edit size={18} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );

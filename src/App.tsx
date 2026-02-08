@@ -20,12 +20,15 @@ import DeliveryMapPage from "./pages/Map";
 import Setting from "./pages/Settings";
 import DeliveriesOrdersPage from "./pages/DeliveriesWithOrders";
 import DeliveryPage from "./pages/Delivery";
+import ClientPage from "./pages/ClientPage";
+import ConfirmOrders from "./pages/ConfirmOrders";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/client/:key" element={<ClientPage />} />
         <Route Component={PrivateRoutes}>
           <Route
             path="/home"
@@ -108,6 +111,14 @@ function App() {
             element={
               <AppLayout>
                 <OrdersPage />
+              </AppLayout>
+            }
+          />
+          <Route
+            path="/clientOrders"
+            element={
+              <AppLayout>
+                <ConfirmOrders />
               </AppLayout>
             }
           />

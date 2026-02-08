@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import Pagination from "../components/Pagintation";
 import Loading from "../components/loading";
-import { useExportOrders, useOrders } from "../hooks/useOrders";
+import { useOrders } from "../hooks/useOrders";
 import {
   deleteMultiOrder,
-  updateOrder,
+  updateManyOrder,
   type GetOrdersParams,
 } from "../services/order";
 import { useUsers } from "../hooks/useUsers";
@@ -18,11 +18,11 @@ import { queryClient } from "../main";
 import type { AxiosError } from "axios";
 import type { APIError } from "../api/api";
 import Loader from "../components/Loader";
-import { CircleDollarSign, PackageCheck, Truck, Wallet } from "lucide-react";
 import DateFilter from "../components/DateFilter";
 import DeleteDialog from "../components/DeleteDialog";
 import { useAuth } from "../store/authStore";
 import { useSearchParams } from "react-router-dom";
+import ConfirmOrder from "../components/CompanyConfirm";
 
 export interface OptionType {
   value: string;
@@ -53,16 +53,18 @@ export const orderStatusOptions: OptionType[] = [
   { value: "POSTPOND", label: "معلق", style: "bg-gray-100 text-gray-700" },
 ];
 
-export default function OrdersPage() {
+export default function ConfirmOrders() {
   const { superAdmin } = useAuth();
   const [page, setPage] = useState(1);
   const [params] = useSearchParams();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isCompanyConfirmOpen, setIsCompanyConfirmOpen] = useState(false);
   const [filters, setFilters] = useState<GetOrdersParams>({
     deliveryId: undefined,
     clientId: undefined,
     status: undefined,
-    confirmed: "true",
+    confirmed: "false",
   });
 
   useEffect(() => {
@@ -94,25 +96,6 @@ export default function OrdersPage() {
     }
   };
 
-  const { refetch, isFetching } = useExportOrders(filters);
-
-  const handleExport = async () => {
-    const result = await refetch(); // 👈 triggers export request
-
-    if (result.data) {
-      const blob = result.data;
-
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-
-      link.href = url;
-      link.download = "orders.xlsx";
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    }
-  };
-
   const { data, isLoading } = useOrders({
     page,
     size: 10,
@@ -141,13 +124,15 @@ export default function OrdersPage() {
   }));
 
   const { mutate: editOrder, isPending } = useMutation({
-    mutationFn: (data: { data: any; id: number }) =>
-      updateOrder(data.data, data.id),
+    mutationFn: (data: any) => updateManyOrder(data),
     onSuccess: () => {
       toast.success("تم تعديل الطلب بنجاح");
       queryClient.invalidateQueries({
         queryKey: ["orders"],
       });
+      setIsConfirmOpen(false);
+      setIsCompanyConfirmOpen(false);
+      setSelectedRows([]);
     },
     onError: (error: AxiosError<APIError>) => {
       toast.error(error.response?.data.message || "حدث خطأ ما");
@@ -168,37 +153,6 @@ export default function OrdersPage() {
       toast.error(error.response?.data.message || "حدث خطأ ما");
     },
   });
-  const stats = [
-    {
-      title: "إجمالي الطلبات",
-      value: data?.pagination.count ?? 0,
-      icon: <PackageCheck size={28} />,
-      color: "bg-[#C4AF8A]",
-      textColor: "text-[#fff]",
-    },
-
-    {
-      title: "إجمالي المدفوعات",
-      value: data?.totalPaid?.total.toLocaleString() ?? 0,
-      icon: <CircleDollarSign size={28} />,
-      color: "bg-[#D9C8AA]",
-      textColor: "text-[#403D39]",
-    },
-    {
-      title: "حساب الشركة",
-      value: data?.totalPaid.shipping?.toLocaleString() ?? 0,
-      icon: <Wallet size={28} />,
-      color: "bg-[#E2D3B5]",
-      textColor: "text-[#403D39]",
-    },
-    {
-      title: "حساب الطيارين",
-      value: data?.totalPaid.deliveryFee ?? 0,
-      icon: <Truck size={28} />,
-      color: "bg-[#F4EBDC]",
-      textColor: "text-[#403D39]",
-    },
-  ];
 
   return (
     <div className="relative">
@@ -211,16 +165,10 @@ export default function OrdersPage() {
       <div className="flex justify-between items-center mb-6">
         <div className="text-right">
           <h1 className="text-2xl font-bold text-[#121E2C] mb-2 mt-0">
-            إدارة الطلبات
+            تأكيد طلبات العملاء
           </h1>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleExport}
-            disabled={isFetching}
-            className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">
-            {isFetching ? "جاري التصدير..." : "تصدير إلى Excel"}
-          </button>
           {!superAdmin ? (
             <button
               onClick={() => setIsDialogOpen(true)}
@@ -305,29 +253,26 @@ export default function OrdersPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-5">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className={`rounded-2xl shadow-md p-5 flex items-center justify-between transition hover:scale-[1.02] duration-300 ${stat.color}`}>
-            <div>
-              <p className={`text-sm font-medium opacity-90 ${stat.textColor}`}>
-                {stat.title}
-              </p>
-              <h2 className={`text-3xl font-bold mt-2 ${stat.textColor}`}>
-                {stat.value}
-              </h2>
-            </div>
-            <div
-              className={`p-3 rounded-xl bg-white/20 backdrop-blur-sm shadow-inner ${stat.textColor}`}>
-              {stat.icon}
-            </div>
-          </div>
-        ))}
-      </div>
-
       {/* Table */}
 
+      <div className="flex items-center gap-2 mt-5 mb-5">
+        <button
+          onClick={() => setIsCompanyConfirmOpen(true)}
+          disabled={selectedRows.length === 0 || isPending}
+          className={`bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 ${
+            selectedRows.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+          }`}>
+          تأكيد فرع
+        </button>
+        <button
+          onClick={() => setIsConfirmOpen(true)}
+          disabled={selectedRows.length === 0 || isPending}
+          className={`bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 ${
+            selectedRows.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+          }`}>
+          تأكيد طيار
+        </button>
+      </div>
       <div className="bg-white shadow rounded-2xl p-4">
         {isLoading ? (
           <Loading />
@@ -354,9 +299,7 @@ export default function OrdersPage() {
                   <th className="p-2">وقت الانشاء</th>
                   <th className="p-2">من</th>
                   <th className="p-2">الي</th>
-                  <th className="p-2">الطيار</th>
                   <th className="p-2">حساب الشركه</th>
-                  <th className="p-2">قيمه الاوردر</th>
                   <th className="p-2">الحاله</th>
                 </tr>
               </thead>
@@ -398,82 +341,23 @@ export default function OrdersPage() {
                       </td>
 
                       <td className="p-3  border-b-1 border-b-indigo-100">
-                        {order.processed ||
-                        order.status === "CANCELED" ||
-                        order.status === "DELIVERED" ||
-                        superAdmin ? (
-                          <span className="text-green-600 font-bold">
-                            {order.delivery
-                              ? order.delivery.user.name
-                              : "غير محدد"}
-                          </span>
-                        ) : (
-                          <Select
-                            value={
-                              order?.delivery
-                                ? deliveryOptions?.find(
-                                    (o) => o.value === order?.delivery.id,
-                                  )
-                                : undefined
-                            }
-                            options={deliveryOptions}
-                            isClearable
-                            className="basic-single"
-                            placeholder="اختر الطيار..."
-                            onChange={(opt) =>
-                              editOrder({
-                                data: { deliveryId: opt?.value },
-                                id: order.id,
-                              })
-                            }
-                          />
-                        )}
-                      </td>
-                      <td className="p-3  border-b-1 border-b-indigo-100">
                         {order.shipping}
                       </td>
-                      <td className="p-3  border-b-1 border-b-indigo-100">
-                        {order.total}
-                      </td>
+
                       <td className="p-3 border-b border-indigo-100">
                         <div className="flex items-center gap-2">
-                          {order.processed ||
-                          order.status === "CANCELED" ||
-                          order.status === "DELIVERED" ||
-                          superAdmin ? (
-                            <div
-                              className={`w-full px-2 py-2 border border-gray-300 rounded-md text-md focus:outline-none focus:ring-1 focus:ring-[#21114A] text-center ${
-                                orderStatusOptions.find(
-                                  (opt) => opt.value === order.status,
-                                )?.style
-                              }`}>
-                              {
-                                orderStatusOptions.find(
-                                  (opt) => opt.value === order.status,
-                                )?.label
-                              }
-                            </div>
-                          ) : (
-                            <select
-                              value={order.status}
-                              onChange={(e) => {
-                                editOrder({
-                                  data: { status: e.target.value },
-                                  id: order.id,
-                                });
-                              }}
-                              className={`w-full px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-[#21114A] ${
-                                orderStatusOptions.find(
-                                  (opt) => opt.value === order.status,
-                                )?.style
-                              }`}>
-                              {orderStatusOptions.map((opt) => (
-                                <option key={opt.value} value={opt.value}>
-                                  {opt.label}
-                                </option>
-                              ))}
-                            </select>
-                          )}
+                          <div
+                            className={`w-full px-2 py-2 border border-gray-300 rounded-md text-md focus:outline-none focus:ring-1 focus:ring-[#21114A] text-center ${
+                              orderStatusOptions.find(
+                                (opt) => opt.value === order.status,
+                              )?.style
+                            }`}>
+                            {
+                              orderStatusOptions.find(
+                                (opt) => opt.value === order.status,
+                              )?.label
+                            }
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -502,6 +386,33 @@ export default function OrdersPage() {
         onCancel={() => setIsDialogOpen(false)}
         onConfirm={() => {
           deleteOrder();
+        }}
+      />
+      <DeleteDialog
+        isOpen={isConfirmOpen}
+        title="تأكيد الطلبات"
+        message="هل أنت متأكد أنك تريد تأكيد هذه الطلبات تأكيد طيار؟"
+        isLoading={isPending}
+        onCancel={() => setIsConfirmOpen(false)}
+        onConfirm={() => {
+          editOrder({
+            ids: selectedRows,
+            deliveryConfirm: true,
+          });
+        }}
+      />
+      <ConfirmOrder
+        isOpen={isCompanyConfirmOpen}
+        title="تأكيد الطلبات"
+        isLoading={isPending}
+        onCancel={() => setIsCompanyConfirmOpen(false)}
+        onConfirm={(shipping) => {
+          editOrder({
+            ids: selectedRows,
+            shipping: shipping,
+            companyConfirm: true,
+            total: 0,
+          });
         }}
       />
     </div>

@@ -2,6 +2,7 @@ import { Settings, Menu } from "lucide-react";
 import { useState } from "react";
 import admin from "../assets/user.png";
 import { useAuth } from "../store/authStore";
+import { useNavigate } from "react-router-dom";
 
 interface NavbarProps {
   toggleSidebar: () => void;
@@ -10,7 +11,7 @@ interface NavbarProps {
 export default function Navbar({ toggleSidebar }: NavbarProps) {
   const { name, role, avatar, logout } = useAuth();
   const [showSettings, setShowSettings] = useState(false);
-
+  const navigate = useNavigate();
   return (
     <header className="fixed top-0 left-0 right-0 lg:right-70 bg-white shadow-sm px-6 py-3 flex items-center justify-between z-40">
       {/* Left: Toggle button (mobile only) */}
@@ -34,10 +35,10 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
               {role === "ADMIN"
                 ? "مدير النظام"
                 : role === "COMPANY_ADMIN"
-                ? "مدير الشركه"
-                : role === "DELIVERY"
-                ? "مندوب"
-                : "مساعد "}
+                  ? "مدير الشركه"
+                  : role === "DELIVERY"
+                    ? "مندوب"
+                    : "مساعد "}
             </p>
           </div>
         </div>
@@ -67,7 +68,10 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
             <ul className="max-h-60 overflow-y-auto">
               <li
                 className="p-3 hover:bg-gray-50 cursor-pointer text-sm text-[red]"
-                onClick={logout}>
+                onClick={() => {
+                  logout();
+                  navigate("/");
+                }}>
                 تسجيل خروج
               </li>
             </ul>

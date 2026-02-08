@@ -5,6 +5,7 @@ import {
   getExportOrders,
   getOrders,
   type GetOrdersParams,
+  getOrdersForCLient,
 } from "../services/order";
 
 export const useOrders = (params: GetOrdersParams) => {
@@ -15,6 +16,17 @@ export const useOrders = (params: GetOrdersParams) => {
     refetchInterval: 10000,
   });
 };
+
+export const useClientOrders = (params: GetOrdersParams) => {
+  return useQuery({
+    queryKey: ["client-orders", params],
+    queryFn: () => getOrdersForCLient(params),
+    refetchOnWindowFocus: true,
+    refetchInterval: 10000,
+    enabled: !!params.key,
+  });
+};
+
 export const useExportOrders = (params: GetOrdersParams) => {
   return useQuery({
     queryKey: ["export-orders", params],

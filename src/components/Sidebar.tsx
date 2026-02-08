@@ -73,6 +73,12 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               label: "متابعه الطلبات",
               roles: ["ADMIN", "COMPANY_ADMIN"],
             },
+            {
+              to: "/clientOrders",
+              icon: <PackageCheck size={22} />,
+              label: "تأكيد طلبات العملاء",
+              roles: ["ADMIN", "COMPANY_ADMIN"],
+            },
             // 🔹 replace route with button action
             {
               action: handleAddOrderClick,
@@ -146,7 +152,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                   </span>
                   <span className="font-bold text-md">{item.label}</span>
                 </NavLink>
-              )
+              ),
             )}
         </nav>
       </div>

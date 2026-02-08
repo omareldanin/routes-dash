@@ -70,8 +70,8 @@ export const authStore = create<IAuthStore>()(
     }),
     {
       name: "auth-storage",
-    }
-  )
+    },
+  ),
 );
 
 export const useAuth = () => authStore((state) => state);

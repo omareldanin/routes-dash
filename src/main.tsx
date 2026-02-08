@@ -19,5 +19,5 @@ createRoot(document.getElementById("root")!).render(
       <App />
       <Toaster position="top-center" reverseOrder={false} />
     </QueryClientProvider>
-  </StrictMode>
+  </StrictMode>,
 );

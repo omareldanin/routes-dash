@@ -12,6 +12,9 @@ export interface Client {
   code: string;
   companyId: number | null;
   address: string | null;
+  key: string | null;
+  shippingValue: number | null;
+  activeShipping: boolean;
 }
 
 export interface ClientsResponse {
@@ -35,7 +38,7 @@ export interface GetClientsParams {
 }
 
 export const getClients = async (
-  params: GetClientsParams
+  params: GetClientsParams,
 ): Promise<ClientsResponse> => {
   const response = await api.get("/clients", { params });
   return response.data;
@@ -43,6 +46,24 @@ export const getClients = async (
 
 export const getClient = async (id: number): Promise<Client> => {
   const response = await api.get("/clients/" + id);
+  return response.data;
+};
+
+export const getClientByKey = async (
+  key?: string,
+): Promise<{
+  id: number;
+  address: string;
+  name: string;
+  key: string;
+  company: {
+    user: {
+      name: string;
+    };
+    id: number;
+  };
+}> => {
+  const response = await api.get("/clients/key/" + key);
   return response.data;
 };
 

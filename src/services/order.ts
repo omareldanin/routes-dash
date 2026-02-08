@@ -98,18 +98,27 @@ export interface GetOrdersParams {
   page?: number;
   size?: number;
   status?: string;
+  key?: string;
   deliveryId?: number;
   clientId?: number;
   companyId?: number;
   from?: string;
   to?: string;
   search?: string;
+  confirmed?: string;
 }
 
 export const getOrders = async (
   params: GetOrdersParams,
 ): Promise<OrdersResponse> => {
   const response = await api.get("/orders", { params });
+  return response.data;
+};
+
+export const getOrdersForCLient = async (
+  params: GetOrdersParams,
+): Promise<OrdersResponse> => {
+  const response = await api.get("/orders/getAllForClient", { params });
   return response.data;
 };
 
@@ -160,5 +169,14 @@ export const resetDeliveryCount = async (params: GetOrdersParams) => {
 
 export const createOrder = async (data: any) => {
   const respone = await api.post("orders/", data);
+  return respone.data;
+};
+
+export const updateManyOrder = async (data: any) => {
+  const respone = await api.post("orders/confirmOrders", data);
+  return respone.data;
+};
+export const createOrderByCLient = async (data: any) => {
+  const respone = await api.post("orders/createByClient", data);
   return respone.data;
 };

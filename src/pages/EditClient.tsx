@@ -21,6 +21,8 @@ const schema = yup.object().shape({
     .required("رقم الهاتف مطلوب"),
   name: yup.string().required("الاسم مطلوب"),
   address: yup.string().required("العنوان مطلوب"),
+  shippingValue: yup.number().optional(),
+  activeShipping: yup.boolean().optional(),
 });
 
 export default function EditClinet() {
@@ -38,6 +40,8 @@ export default function EditClinet() {
       name: "",
       phone: "",
       address: "",
+      shippingValue: 0,
+      activeShipping: false,
     },
   });
 
@@ -49,6 +53,8 @@ export default function EditClinet() {
         name: client.name!!,
         phone: client?.phone,
         address: client?.address!!,
+        shippingValue: client.shippingValue || 0,
+        activeShipping: client.activeShipping,
       });
     }
   }, [client]);
@@ -72,6 +78,8 @@ export default function EditClinet() {
     formData.append("phone", data.phone);
     formData.append("name", data.name);
     formData.append("address", data.address);
+    formData.append("shippingValue", data.shippingValue);
+    formData.append("activeShipping", data.activeShipping);
 
     editClient(formData);
   };
@@ -131,6 +139,21 @@ export default function EditClinet() {
           </p>
         </div>
 
+        <div>
+          <div className="flex items-center justify-start gap-2 mb-3">
+            <input
+              type="checkbox"
+              {...register("activeShipping")}
+              className="w-6 h-6 rounded-md border-2 border-[#D9C8AA] text-[#000000] bg-[#F9FAFB] focus:ring-2 focus:ring-[#D9C8AA] focus:ring-offset-0 cursor-pointer"
+            />
+
+            <label className="mb-1 text-[#121E2C]">قيمه شحن ثابته</label>
+          </div>
+          <input
+            {...register("shippingValue")}
+            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D9C8AA] bg-[#F9FAFB] text-gray-900"
+          />
+        </div>
         {/* زر الحفظ */}
         <button
           type="submit"

@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import {
   getClient,
+  getClientByKey,
   getClients,
   type Client,
   type ClientsResponse,
@@ -21,5 +22,25 @@ export const useClient = (id: number) => {
     queryKey: ["user", id],
     queryFn: () => getClient(id),
     refetchOnWindowFocus: false,
+  });
+};
+
+export const useClientByKey = (key?: string) => {
+  return useQuery<{
+    id: number;
+    address: string;
+    key: string;
+    name: string;
+    company: {
+      user: {
+        name: string;
+      };
+      id: number;
+    };
+  }>({
+    queryKey: ["client", key],
+    queryFn: () => getClientByKey(key),
+    refetchOnWindowFocus: false,
+    enabled: !!key,
   });
 };
