@@ -22,8 +22,56 @@ import DeliveriesOrdersPage from "./pages/DeliveriesWithOrders";
 import DeliveryPage from "./pages/Delivery";
 import ClientPage from "./pages/ClientPage";
 import ConfirmOrders from "./pages/ConfirmOrders";
+import { useAuth } from "./store/authStore";
+import { useEffect } from "react";
+import { connectSocket } from "./services/socket";
+import toast from "react-hot-toast";
+import successSound from "./assets/success.mp3";
 
 function App() {
+  const { id } = useAuth();
+
+  const playSound = (path: string) => {
+    const audio = new Audio(path);
+    audio.play().catch(() => {}); // prevent console error if autoplay blocked
+  };
+
+  useEffect(() => {
+    if (!id) return;
+
+    const socket = connectSocket();
+
+    socket.on("connect", () => {
+      console.log("Socket connected:", socket.id);
+
+      socket.emit("joinCompany", Number(id));
+    });
+
+    socket.on("newOrder", (order) => {
+      console.log("New Order Received:", order);
+      playSound(successSound);
+      toast.success(`يوجد طلب جديد #${order.id} من العميل ${order.name} `, {
+        style: {
+          fontSize: "20px",
+          padding: "15px 20px",
+          textAlign: "center",
+          background: "#10B981",
+          color: "#fff",
+          borderRadius: "10px",
+        },
+        iconTheme: {
+          primary: "#fff",
+          secondary: "#10B981",
+        },
+        position: "top-left",
+        duration: 3000,
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   return (
     <Router>
       <Routes>

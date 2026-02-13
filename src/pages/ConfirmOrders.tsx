@@ -7,6 +7,7 @@ import { useOrders } from "../hooks/useOrders";
 import {
   deleteMultiOrder,
   updateManyOrder,
+  updateOrder,
   type GetOrdersParams,
 } from "../services/order";
 import { useUsers } from "../hooks/useUsers";
@@ -139,6 +140,20 @@ export default function ConfirmOrders() {
     },
   });
 
+  const { mutate: updateDelivery, isPending: updateLoading } = useMutation({
+    mutationFn: (data: { data: any; id: number }) =>
+      updateOrder(data.data, data.id),
+    onSuccess: () => {
+      toast.success("تم تعديل الطلب بنجاح");
+      queryClient.invalidateQueries({
+        queryKey: ["orders"],
+      });
+    },
+    onError: (error: AxiosError<APIError>) => {
+      toast.error(error.response?.data.message || "حدث خطأ ما");
+    },
+  });
+
   const { mutate: deleteOrder, isPending: loadingdelete } = useMutation({
     mutationFn: () => deleteMultiOrder(selectedRows),
     onSuccess: () => {
@@ -156,7 +171,7 @@ export default function ConfirmOrders() {
 
   return (
     <div className="relative">
-      {isPending ? (
+      {isPending || updateLoading ? (
         <div className="absolute top-[0] left-[0] w-full h-full flex items-center justify-center z-55 ">
           <Loader size="md" />
         </div>
@@ -299,6 +314,7 @@ export default function ConfirmOrders() {
                   <th className="p-2">وقت الانشاء</th>
                   <th className="p-2">من</th>
                   <th className="p-2">الي</th>
+                  <th className="p-2">الطيار</th>
                   <th className="p-2">حساب الشركه</th>
                   <th className="p-2">الحاله</th>
                 </tr>
@@ -339,7 +355,38 @@ export default function ConfirmOrders() {
                           {order.to}
                         </div>
                       </td>
-
+                      <td className="p-3  border-b-1 border-b-indigo-100">
+                        {order.processed ||
+                        order.status === "CANCELED" ||
+                        order.status === "DELIVERED" ||
+                        superAdmin ? (
+                          <span className="text-green-600 font-bold">
+                            {order.delivery
+                              ? order.delivery.user.name
+                              : "غير محدد"}
+                          </span>
+                        ) : (
+                          <Select
+                            value={
+                              order?.delivery
+                                ? deliveryOptions?.find(
+                                    (o) => o.value === order?.delivery.id,
+                                  )
+                                : undefined
+                            }
+                            options={deliveryOptions}
+                            isClearable
+                            className="basic-single"
+                            placeholder="اختر الطيار..."
+                            onChange={(opt) =>
+                              updateDelivery({
+                                data: { deliveryId: opt?.value },
+                                id: order.id,
+                              })
+                            }
+                          />
+                        )}
+                      </td>
                       <td className="p-3  border-b-1 border-b-indigo-100">
                         {order.shipping}
                       </td>
