@@ -112,7 +112,7 @@ export default function DeliveryPage() {
               <img
                 src={
                   user?.user.avatar
-                    ? "https://test.talabatk.top/" + user?.user.avatar
+                    ? "https://api.routes-co.com/" + user?.user.avatar
                     : admin
                 }
                 alt={user?.user.name}

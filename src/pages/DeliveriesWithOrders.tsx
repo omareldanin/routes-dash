@@ -54,7 +54,7 @@ export default function DeliveriesOrdersPage() {
 
     if (hasLetters) {
       return deliveries?.results.filter((d) =>
-        d.name.toLowerCase().includes(term.toLowerCase())
+        d.name.toLowerCase().includes(term.toLowerCase()),
       );
     }
 
@@ -134,13 +134,13 @@ export default function DeliveriesOrdersPage() {
                           className="flex items-center gap-3 cursor-pointer"
                           onClick={() =>
                             navigate(
-                              `/current-deliveries/delivery/${delivery.id}`
+                              `/current-deliveries/delivery/${delivery.id}`,
                             )
                           }>
                           <img
                             src={
                               delivery.avatar
-                                ? "https://test.talabatk.top/" + delivery.avatar
+                                ? "https://api.routes-co.com/" + delivery.avatar
                                 : admin
                             }
                             alt={delivery.name}
@@ -166,7 +166,7 @@ export default function DeliveriesOrdersPage() {
                                 (order.shipping *
                                   order.company.deliveryPrecent) /
                                   100,
-                              0
+                              0,
                             )
                           : 0}
                       </td>

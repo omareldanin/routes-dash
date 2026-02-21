@@ -25,7 +25,7 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
 
         <div className="flex items-center gap-3 ms-auto">
           <img
-            src={"https://test.talabatk.top/" + avatar || admin}
+            src={"https://api.routes-co.com/" + avatar || admin}
             alt="User"
             className="w-10 h-10 rounded-full object-cover"
           />
