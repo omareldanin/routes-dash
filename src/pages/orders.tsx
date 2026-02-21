@@ -23,6 +23,7 @@ import DateFilter from "../components/DateFilter";
 import DeleteDialog from "../components/DeleteDialog";
 import { useAuth } from "../store/authStore";
 import { useSearchParams } from "react-router-dom";
+import EditOrderModal from "./EditOrderModal";
 
 export interface OptionType {
   value: string;
@@ -64,6 +65,9 @@ export default function OrdersPage() {
     status: undefined,
     confirmed: "true",
   });
+
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
   useEffect(() => {
     const clientId = params.get("clientId");
@@ -168,6 +172,7 @@ export default function OrdersPage() {
       toast.error(error.response?.data.message || "حدث خطأ ما");
     },
   });
+
   const stats = [
     {
       title: "إجمالي الطلبات",
@@ -358,6 +363,7 @@ export default function OrdersPage() {
                   <th className="p-2">حساب الشركه</th>
                   <th className="p-2">قيمه الاوردر</th>
                   <th className="p-2">الحاله</th>
+                  <th className="p-2">تعديل</th>
                 </tr>
               </thead>
               <tbody>
@@ -476,6 +482,16 @@ export default function OrdersPage() {
                           )}
                         </div>
                       </td>
+                      <td className="p-3 border-b border-indigo-100 text-center">
+                        <button
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setIsEditOpen(true);
+                          }}
+                          className="px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                          تعديل
+                        </button>
+                      </td>
                     </tr>
                   );
                 })}
@@ -494,6 +510,17 @@ export default function OrdersPage() {
           </>
         )}
       </div>
+      <EditOrderModal
+        order={selectedOrder}
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        onSave={(data) =>
+          editOrder({
+            id: selectedOrder.id,
+            data,
+          })
+        }
+      />
       <DeleteDialog
         isOpen={isDialogOpen}
         title="حذف الطلبات"
