@@ -48,13 +48,13 @@ export default function AddOrderMenu({
     total: undefined,
   });
   const [selectedClient, setSelectedClient] = useState<Client | undefined>(
-    undefined
+    undefined,
   );
   const [companyConfirm, setCompanyConfirm] = useState(false);
 
   const { data: clients } = useClients({
     page: 1,
-    size: 1000,
+    size: 2000,
   });
 
   const { data: user } = useGetProfile();
@@ -116,7 +116,7 @@ export default function AddOrderMenu({
 
     if (hasLetters) {
       return clients?.data.filter((d) =>
-        d.name?.toLowerCase().includes(term.toLowerCase())
+        d.name?.toLowerCase().includes(term.toLowerCase()),
       );
     }
 
