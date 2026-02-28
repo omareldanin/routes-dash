@@ -17,6 +17,7 @@ const schema = yup.object().shape({
   max: yup.number().optional(),
   min: yup.number().optional(),
   deliveryPrecent: yup.number().optional(),
+  confirmOrders: yup.boolean().optional(),
 });
 
 export default function Setting() {
@@ -42,6 +43,7 @@ export default function Setting() {
         max: user.user?.max,
         min: user.user?.min,
         deliveryPrecent: user.user?.deliveryPrecent,
+        confirmOrders: user.user.confirmOrders,
       });
     }
   }, [user]);
@@ -65,6 +67,7 @@ export default function Setting() {
     formData.append("min", data.min);
     formData.append("max", data.max);
     formData.append("deliveryPrecent", data.deliveryPrecent);
+    formData.append("confirmOrders", data.confirmOrders);
 
     update(formData);
   };
@@ -125,6 +128,15 @@ export default function Setting() {
           <p className="text-red-500 text-sm">
             {errors.deliveryPrecent?.message as string}
           </p>
+        </div>
+        <div className="flex items-center justify-start gap-2 mb-3">
+          <input
+            type="checkbox"
+            {...register("confirmOrders")}
+            className="w-6 h-6 rounded-md border-2 border-[#D9C8AA] text-[#000000] bg-[#F9FAFB] focus:ring-2 focus:ring-[#D9C8AA] focus:ring-offset-0 cursor-pointer"
+          />
+
+          <label className="mb-1 text-[#121E2C]">تأكيد الطلبات تلقائي</label>
         </div>
         {/* زر الحفظ */}
         <button

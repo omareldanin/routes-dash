@@ -24,6 +24,7 @@ import DeleteDialog from "../components/DeleteDialog";
 import { useAuth } from "../store/authStore";
 import { useSearchParams } from "react-router-dom";
 import EditOrderModal from "./EditOrderModal";
+import { ToggleText } from "../components/OrdersTable";
 
 export interface OptionType {
   value: string;
@@ -362,6 +363,7 @@ export default function OrdersPage() {
                   <th className="p-2">الطيار</th>
                   <th className="p-2">حساب الشركه</th>
                   <th className="p-2">قيمه الاوردر</th>
+                  <th className="p-2">الملاحظات</th>
                   <th className="p-2">الحاله</th>
                   <th className="p-2">تعديل</th>
                 </tr>
@@ -440,6 +442,9 @@ export default function OrdersPage() {
                       </td>
                       <td className="p-3  border-b-1 border-b-indigo-100">
                         {order.total}
+                      </td>
+                      <td className="p-3 border-b-1 border-b-indigo-100 max-w-[220px]">
+                        <ToggleText text={order.notes} />
                       </td>
                       <td className="p-3 border-b border-indigo-100">
                         <div className="flex items-center gap-2">

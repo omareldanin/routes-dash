@@ -209,8 +209,6 @@ export default function AddOrderMenu({
                       if (e.target.checked) {
                         let result = "";
                         if (user?.user?.min) {
-                          console.log("sss");
-
                           for (
                             let index = 0;
                             index < orderData?.count!!;
@@ -382,20 +380,32 @@ export default function AddOrderMenu({
               ) : null}
             </div>
             <div className="flex gap-3">
-              <button
-                type="button"
-                className="w-full bg-[#121E2C] text-white py-2 rounded-lg hover:bg-[#2c2c2c] transition disabled:opacity-75"
-                disabled={!orderData?.clientId || !orderData.from}
-                onClick={() => setCompanyConfirm(true)}>
-                تآكيد فرع
-              </button>
-              <button
-                type="button"
-                className="w-full bg-[#ccc] text-black py-2 rounded-lg hover:bg-[grey] transition disabled:opacity-75"
-                disabled={!orderData?.clientId || !orderData.from}
-                onClick={onSubmit}>
-                تآكيد طيار
-              </button>
+              {user?.user.confirmOrders ? (
+                <>
+                  <button
+                    type="button"
+                    className="w-full bg-[#121E2C] text-white py-2 rounded-lg hover:bg-[#2c2c2c] transition disabled:opacity-75"
+                    disabled={!orderData?.clientId || !orderData.from}
+                    onClick={() => setCompanyConfirm(true)}>
+                    تآكيد فرع
+                  </button>
+                  <button
+                    type="button"
+                    className="w-full bg-[#ccc] text-black py-2 rounded-lg hover:bg-[grey] transition disabled:opacity-75"
+                    disabled={!orderData?.clientId || !orderData.from}
+                    onClick={onSubmit}>
+                    تآكيد طيار
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  className="w-full bg-[#121E2C] text-white py-2 rounded-lg hover:bg-[grey] transition disabled:opacity-75"
+                  disabled={!orderData?.clientId || !orderData.from}
+                  onClick={onSubmit}>
+                  تآكيد
+                </button>
+              )}
             </div>
           </form>
         )}

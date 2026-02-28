@@ -32,6 +32,7 @@ export interface User {
   min: number;
   max: number;
   online: boolean;
+  confirmOrders: boolean;
   worksFroms: string;
   worksTo: string;
   longitudes: string;
@@ -64,7 +65,7 @@ export interface GetUsersParams {
 }
 
 export const getUsers = async (
-  params: GetUsersParams
+  params: GetUsersParams,
 ): Promise<UsersResponse> => {
   const response = await api.get("/users/getAll", { params });
   return response.data;

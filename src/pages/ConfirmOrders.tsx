@@ -24,6 +24,7 @@ import DeleteDialog from "../components/DeleteDialog";
 import { useAuth } from "../store/authStore";
 import { useSearchParams } from "react-router-dom";
 import ConfirmOrder from "../components/CompanyConfirm";
+import { ToggleText } from "../components/OrdersTable";
 
 export interface OptionType {
   value: string;
@@ -314,6 +315,7 @@ export default function ConfirmOrders() {
                   <th className="p-2">وقت الانشاء</th>
                   <th className="p-2">من</th>
                   <th className="p-2">الي</th>
+                  <th className="p-2">الملاحظات</th>
                   <th className="p-2">الطيار</th>
                   <th className="p-2">حساب الشركه</th>
                   <th className="p-2">الحاله</th>
@@ -354,6 +356,9 @@ export default function ConfirmOrders() {
                         <div className="truncate" title={order.to}>
                           {order.to}
                         </div>
+                      </td>
+                      <td className="p-3 border-b-1 border-b-indigo-100 max-w-[220px]">
+                        <ToggleText text={order.notes} />
                       </td>
                       <td className="p-3  border-b-1 border-b-indigo-100">
                         {order.processed ||
