@@ -294,129 +294,132 @@ export default function ConfirmOrders() {
           <Loading />
         ) : (
           <>
-            <table className="w-full text-sm text-right border-separate border-spacing-y-2">
-              <thead>
-                <tr className="bg-gradient-to-r from-[#1c46a2] to-[#9341a7ff] text-white shadow-sm">
-                  <th className="p-2 flex items-center justify-center">
-                    <input
-                      type="checkbox"
-                      className="w-5 h-5 accent-purple-700 cursor-pointer"
-                      checked={
-                        data?.data &&
-                        data?.data.length > 0 &&
-                        data?.data.every((o) => selectedRows.includes(o.id))
-                      }
-                      onChange={toggleSelectAll}
-                    />
-                  </th>
+            <div className="w-full overflow-auto">
+              <table className="min-w-[1200px] text-sm text-right border-separate border-spacing-y-2">
+                <thead>
+                  <tr className="bg-gradient-to-r from-[#1c46a2] to-[#9341a7ff] text-white shadow-sm">
+                    <th className="p-2 flex items-center justify-center">
+                      <input
+                        type="checkbox"
+                        className="w-5 h-5 accent-purple-700 cursor-pointer"
+                        checked={
+                          data?.data &&
+                          data?.data.length > 0 &&
+                          data?.data.every((o) => selectedRows.includes(o.id))
+                        }
+                        onChange={toggleSelectAll}
+                      />
+                    </th>
 
-                  <th className="p-2">#</th>
-                  <th className="p-2">العميل</th>
-                  <th className="p-2">وقت الانشاء</th>
-                  <th className="p-2">من</th>
-                  <th className="p-2">الي</th>
-                  <th className="p-2">الملاحظات</th>
-                  <th className="p-2">الطيار</th>
-                  <th className="p-2">حساب الشركه</th>
-                  <th className="p-2">الحاله</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.data.map((order) => {
-                  const create = new Date(order.createdAt);
+                    <th className="p-2">#</th>
+                    <th className="p-2">العميل</th>
+                    <th className="p-2">وقت الانشاء</th>
+                    <th className="p-2">من</th>
+                    <th className="p-2">الي</th>
+                    <th className="p-2">الملاحظات</th>
+                    <th className="p-2">الطيار</th>
+                    <th className="p-2">حساب الشركه</th>
+                    <th className="p-2">الحاله</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data?.data.map((order) => {
+                    const create = new Date(order.createdAt);
 
-                  return (
-                    <tr
-                      key={order.id}
-                      className="bg-white rounded-lg text-gray-700 border-4 border-indigo-500">
-                      <td className="p-3 border-b-1 border-b-indigo-100 text-center">
-                        <input
-                          type="checkbox"
-                          className="w-5 h-5 accent-purple-700 cursor-pointer"
-                          checked={selectedRows.includes(order.id)}
-                          onChange={() => toggleSelect(order.id)}
-                        />
-                      </td>
-                      <td className="p-3 border-b-1 border-b-indigo-100">
-                        {order.id}
-                      </td>
-                      <td className="p-3  border-b-1 border-b-indigo-100">
-                        {order.client?.name}
-                      </td>
-                      <td className="p-3  border-b-1 border-b-indigo-100">
-                        {create.toLocaleString()}
-                      </td>
-                      <td className="p-3 border-b-1 border-b-indigo-100 max-w-[220px]">
-                        <div className="truncate" title={order.from}>
-                          {order.from}
-                        </div>
-                      </td>
-
-                      <td className="p-3 border-b-1 border-b-indigo-100 max-w-[220px]">
-                        <div className="truncate" title={order.to}>
-                          {order.to}
-                        </div>
-                      </td>
-                      <td className="p-3 border-b-1 border-b-indigo-100 max-w-[220px]">
-                        <ToggleText text={order.notes} />
-                      </td>
-                      <td className="p-3  border-b-1 border-b-indigo-100">
-                        {order.processed ||
-                        order.status === "CANCELED" ||
-                        order.status === "DELIVERED" ||
-                        superAdmin ? (
-                          <span className="text-green-600 font-bold">
-                            {order.delivery
-                              ? order.delivery.user.name
-                              : "غير محدد"}
-                          </span>
-                        ) : (
-                          <Select
-                            value={
-                              order?.delivery
-                                ? deliveryOptions?.find(
-                                    (o) => o.value === order?.delivery.id,
-                                  )
-                                : undefined
-                            }
-                            options={deliveryOptions}
-                            isClearable
-                            className="basic-single"
-                            placeholder="اختر الطيار..."
-                            onChange={(opt) =>
-                              updateDelivery({
-                                data: { deliveryId: opt?.value },
-                                id: order.id,
-                              })
-                            }
+                    return (
+                      <tr
+                        key={order.id}
+                        className="bg-white rounded-lg text-gray-700 border-4 border-indigo-500">
+                        <td className="p-3 border-b-1 border-b-indigo-100 text-center">
+                          <input
+                            type="checkbox"
+                            className="w-5 h-5 accent-purple-700 cursor-pointer"
+                            checked={selectedRows.includes(order.id)}
+                            onChange={() => toggleSelect(order.id)}
                           />
-                        )}
-                      </td>
-                      <td className="p-3  border-b-1 border-b-indigo-100">
-                        {order.shipping}
-                      </td>
-
-                      <td className="p-3 border-b border-indigo-100">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className={`w-full px-2 py-2 border border-gray-300 rounded-md text-md focus:outline-none focus:ring-1 focus:ring-[#21114A] text-center ${
-                              orderStatusOptions.find(
-                                (opt) => opt.value === order.status,
-                              )?.style
-                            }`}>
-                            {
-                              orderStatusOptions.find(
-                                (opt) => opt.value === order.status,
-                              )?.label
-                            }
+                        </td>
+                        <td className="p-3 border-b-1 border-b-indigo-100">
+                          {order.id}
+                        </td>
+                        <td className="p-3  border-b-1 border-b-indigo-100">
+                          {order.client?.name}
+                        </td>
+                        <td className="p-3  border-b-1 border-b-indigo-100">
+                          {create.toLocaleString()}
+                        </td>
+                        <td className="p-3 border-b-1 border-b-indigo-100 max-w-[220px]">
+                          <div className="truncate" title={order.from}>
+                            {order.from}
                           </div>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        </td>
+
+                        <td className="p-3 border-b-1 border-b-indigo-100 max-w-[220px]">
+                          <div className="truncate" title={order.to}>
+                            {order.to}
+                          </div>
+                        </td>
+                        <td className="p-3 border-b-1 border-b-indigo-100 max-w-[220px]">
+                          <ToggleText text={order.notes} />
+                        </td>
+                        <td className="p-3  border-b-1 border-b-indigo-100">
+                          {order.processed ||
+                          order.status === "CANCELED" ||
+                          order.status === "DELIVERED" ||
+                          superAdmin ? (
+                            <span className="text-green-600 font-bold">
+                              {order.delivery
+                                ? order.delivery.user.name
+                                : "غير محدد"}
+                            </span>
+                          ) : (
+                            <Select
+                              value={
+                                order?.delivery
+                                  ? deliveryOptions?.find(
+                                      (o) => o.value === order?.delivery.id,
+                                    )
+                                  : undefined
+                              }
+                              options={deliveryOptions}
+                              isClearable
+                              className="basic-single"
+                              placeholder="اختر الطيار..."
+                              onChange={(opt) =>
+                                updateDelivery({
+                                  data: { deliveryId: opt?.value },
+                                  id: order.id,
+                                })
+                              }
+                            />
+                          )}
+                        </td>
+                        <td className="p-3  border-b-1 border-b-indigo-100">
+                          {order.shipping}
+                        </td>
+
+                        <td className="p-3 border-b border-indigo-100">
+                          <div className="flex items-center gap-2">
+                            <div
+                              className={`w-full px-2 py-2 border border-gray-300 rounded-md text-md focus:outline-none focus:ring-1 focus:ring-[#21114A] text-center ${
+                                orderStatusOptions.find(
+                                  (opt) => opt.value === order.status,
+                                )?.style
+                              }`}>
+                              {
+                                orderStatusOptions.find(
+                                  (opt) => opt.value === order.status,
+                                )?.label
+                              }
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
             {data?.pagination.count === 0 && !isLoading ? (
               <div className="flex justify-center">
                 <p className="text-md text-gray-500 mt-5">لا يوجد طلبات</p>

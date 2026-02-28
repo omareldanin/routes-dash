@@ -20,7 +20,7 @@ const AppLayout = ({ children }: Props) => {
       {/* Main content */}
       <main
         className={`flex-1 w-full mt-20 p-6 transition-all duration-300 pb-8 ${
-          isSidebarOpen ? "mr-70 lg:mr-70" : "mr-0 lg:mr-70"
+          isSidebarOpen ? "pr-76 lg:pr-76" : "pr-6 lg:pr-76"
         }`}>
         {children}
       </main>
